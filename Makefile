@@ -1,3 +1,17 @@
+# utils/no-brainer/config aliases
+rm-stopped-ctn: ## Remove all stopped  containers.
+	docker rm $(docker ps -a -q)
+
+rm-untagged-img: ## Remove all untagged  images.
+	docker images -q --filter "dangling=true" | xargs docker rmi
+
+rm-image_based-ctn: ## Remove all containers based on specific image.
+	docker ps --filter ancestor=codefresh/golang:1.1 -q | xargs -l docker stop
+
+rm-unused-vol: ## Remove unused data volumes.
+	docker volume rm $(docker volume ls -qf dangling=true)
+
+
 # import config.
 # You can change the default config with `make cnf="config_special.env" build`
 cnf ?= config.env
